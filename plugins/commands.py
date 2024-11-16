@@ -4,6 +4,7 @@
 
 import os, string, logging, random, asyncio, time, datetime, re, sys, json, base64
 from Script import script
+from .pm_filter import auto_filter
 from pyrogram import Client, filters, enums
 from pyrogram.errors import ChatAdminRequired, FloodWait
 from pyrogram.types import *
@@ -166,6 +167,14 @@ async def start(client, message):
             parse_mode=enums.ParseMode.HTML
         )
         return
+
+    if len(message.command) == 2 and message.command[1].startswith('search'):
+        movies = message.command[1].split("-", 1)[1] 
+        movie = movies.replace('-',' ')
+        message.text = movie 
+        await auto_filter(client, message) 
+        return
+        
     data = message.command[1]
     if data.split("-", 1)[0] == "VJ":
         user_id = int(data.split("-", 1)[1])
